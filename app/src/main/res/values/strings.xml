@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Amefuri App</string>
+    <string name="app_name">Amefuri</string>
+    <string name="todo">TODO</string>
+    <string name="amefurilogo">amefuriLogo</string>
 </resources>
