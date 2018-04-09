@@ -22,7 +22,7 @@ public class SplashScreen extends Activity {
     }
 
     private void mostrarMainActivity() {
-        Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+        Intent intent = new Intent(SplashScreen.this, MenuActivity.class);
         startActivity(intent);
         finish();
     }
