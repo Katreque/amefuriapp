@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,7 +19,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MenuActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+                    BlogFragment.OnFragmentInteractionListener,
+                    HomeFragment.OnFragmentInteractionListener
+{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,30 +72,34 @@ public class MenuActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_home) {
             FragmentManager manager = getFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(R.id.container, new HomeFragment(), "home");
+            transaction.replace(R.id.mainLayout, new HomeFragment(), "home");
             transaction.addToBackStack(null);
             transaction.commit();
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_blog) {
             FragmentManager manager = getFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.container, new BlogFragment(), "home");
+            transaction.replace(R.id.mainLayout, new BlogFragment(), "blog");
             transaction.addToBackStack(null);
             transaction.commit();
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_amefuri_tv) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_amefuri_play) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_facebook) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_instagram) {
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void onFragmentInteraction(Uri uri){
+        //you can leave it empty
     }
 }
