@@ -3,36 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single" >
         <item
             android:id="@+id/nav_home"
+            android:icon="@drawable/home_icon"
             android:title="Home" />
         <item
             android:id="@+id/nav_blog"
-            android:title="Blog" />
+            android:icon="@drawable/blog_icon"
+            android:title="Amefuri Blog" />
         <item
             android:id="@+id/nav_amefuri_tv"
+            android:icon="@drawable/amefuri_tv_icon"
             android:title="Amefuri TV" />
         <item
             android:id="@+id/nav_amefuri_play"
+            android:icon="@drawable/amefuri_cast_icon"
             android:title="Amefuri Play" />
+        <item
+            android:id="@+id/nav_apoie"
+            android:icon="@drawable/apoie_icon"
+            android:title="Apoie" />
     </group>
-
-    <item android:title="Redes Sociais">
-        <menu>
-            <item
-                android:id="@+id/nav_facebook"
-                android:title="Facebook" />
-            <item
-                android:id="@+id/nav_instagram"
-                android:title="Instagram" />
-            <item
-                android:id="@+id/nav_twitter"
-                android:title="Twitter" />
-            <item
-                android:id="@+id/nav_discord"
-                android:title="Discord" />
-        </menu>
-    </item>
-
 </menu>

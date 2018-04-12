@@ -39,6 +39,12 @@ public class MenuActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.mainLayout, new HomeFragment(), "home");
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override
@@ -88,9 +94,7 @@ public class MenuActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_amefuri_play) {
 
-        } else if (id == R.id.nav_facebook) {
-
-        } else if (id == R.id.nav_instagram) {
+        } else if (id == R.id.nav_apoie) {
 
         }
 
