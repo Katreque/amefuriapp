@@ -8,6 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.youtube.YouTube;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.http.HttpRequest;
+
+import java.io.IOException;
+
+import amefuri.amefuriapp.youtube.api.management.YouTubeTokenManager;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -104,5 +116,16 @@ public class Fragment_tv extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void getPlaylistTodosVideosAmefuri() {
+        HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+        JsonFactory JSON_FACTORY = new JacksonFactory();
+        YouTube youtube;
+        YouTubeTokenManager ytm = new YouTubeTokenManager();
+
+        youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
+            public void initialize(HttpRequest request) throws IOException {}
+        }).setApplicationName("youtube-cmdline-search-sample").build();
     }
 }
