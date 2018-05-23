@@ -24,5 +24,9 @@
             android:id="@+id/nav_apoie"
             android:icon="@drawable/apoie_icon"
             android:title="Apoie" />
+        <item
+            android:id="@+id/nav_config"
+            android:icon="@drawable/apoie_icon"
+            android:title="Configurações" />
     </group>
 </menu>

@@ -1,21 +1,16 @@
 package amefuri.amefuriapp;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Intent;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 public class MenuActivity extends AppCompatActivity
@@ -24,7 +19,8 @@ public class MenuActivity extends AppCompatActivity
                     HomeFragment.OnFragmentInteractionListener,
                     Fragment_tv.OnFragmentInteractionListener,
                     PlayFragment.OnFragmentInteractionListener,
-                    ApoieFragment.OnFragmentInteractionListener
+                    ApoieFragment.OnFragmentInteractionListener,
+                    ConfigFragment.OnFragmentInteractionListener
 {
 
     @Override
@@ -43,11 +39,13 @@ public class MenuActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FragmentManager manager = getFragmentManager();
+        FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.mainLayout, new HomeFragment(), "home");
         transaction.addToBackStack(null);
         transaction.commit();
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferencias, false);
     }
 
     @Override
@@ -82,33 +80,39 @@ public class MenuActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            FragmentManager manager = getFragmentManager();
+            FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.mainLayout, new HomeFragment(), "home");
             transaction.addToBackStack(null);
             transaction.commit();
         } else if (id == R.id.nav_blog) {
-            FragmentManager manager = getFragmentManager();
+            FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.mainLayout, new BlogFragment(), "blog");
             transaction.addToBackStack(null);
             transaction.commit();
         } else if (id == R.id.nav_amefuri_tv) {
-            FragmentManager manager = getFragmentManager();
+            FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.mainLayout, new Fragment_tv(), "tv");
             transaction.addToBackStack(null);
             transaction.commit();
         } else if (id == R.id.nav_amefuri_play) {
-            FragmentManager manager = getFragmentManager();
+            FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.mainLayout, new PlayFragment(), "play");
             transaction.addToBackStack(null);
             transaction.commit();
         } else if (id == R.id.nav_apoie) {
-            FragmentManager manager = getFragmentManager();
+            FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.mainLayout, new ApoieFragment(), "apoie");
+            transaction.addToBackStack(null);
+            transaction.commit();
+        } else if (id == R.id.nav_config) {
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.mainLayout, new ConfigFragment(), "config");
             transaction.addToBackStack(null);
             transaction.commit();
         }
