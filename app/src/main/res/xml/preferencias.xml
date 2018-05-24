@@ -4,15 +4,10 @@
     android:title="Notificações">
 
     <CheckBoxPreference
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:defaultValue="true"
         android:key="PREF_CHECK_NOT"
         android:summary="Receba notificações do Amefuri"
         android:title="Notificações" />
-
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="PREF_CHECK_TESTE"
-        android:summary="Its us que stay!"
-        android:title="Outra Opção" />
-
 </PreferenceScreen>
