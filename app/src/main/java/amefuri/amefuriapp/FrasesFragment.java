@@ -13,16 +13,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.List;
+import java.util.Random;
 
 import amefuri.amefuriapp.db.Frase;
 import amefuri.amefuriapp.db.FraseViewModel;
 
 public class FrasesFragment extends Fragment {
     private FraseViewModel mFraseViewModel;
-    TextView campoFrase;
+    TextView campoFrase, campoNomeAutor;
     Button maisUma;
-    List<Frase> listaFrases;
+    Frase[] arrayRetorno;
+    public int random;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,22 +39,44 @@ public class FrasesFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         campoFrase = view.findViewById(R.id.campoFrase);
+        campoNomeAutor = view.findViewById(R.id.campoNomeAutor);
         view.findViewById(R.id.maisUma).setOnClickListener(maisUmaClickListener);
+
+        buscaFrases(mFraseViewModel);
     }
 
     public void buscaFrases(FraseViewModel mFraseViewModel){
         mFraseViewModel.getAllFrases().observe(this, new Observer<List<Frase>>() {
             @Override
-            public void onChanged(@Nullable final List<Frase> frases) {
-                listaFrases = frases;
+            public void onChanged(final List<Frase> frases) {
+                arrayRetorno = new Frase[frases.size()];
+                for(int i = 0; i < frases.size(); i++){
+                    arrayRetorno[i] = frases.get(i);
+                }
             }
         });
+    }
+
+    public void generateRandomFrase(Frase[] arrayRetorno) {
+        int rnd = new Random().nextInt(arrayRetorno.length);
+
+        while(true) {
+            if (rnd == random) {
+                rnd = new Random().nextInt(arrayRetorno.length);
+            } else {
+                break;
+            }
+        }
+
+        campoFrase.setText(arrayRetorno[rnd].getFrase());
+        campoNomeAutor.setText(arrayRetorno[rnd].getNomeAutor());
+        random = rnd;
     }
 
     private View.OnClickListener maisUmaClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            buscaFrases(mFraseViewModel);
+            generateRandomFrase(arrayRetorno);
         }
     };
 

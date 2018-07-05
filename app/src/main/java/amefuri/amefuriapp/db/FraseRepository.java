@@ -19,24 +19,4 @@ public class FraseRepository {
     LiveData<List<Frase>> getAllFrases() {
         return mAllFrases;
     }
-
-
-    public void insert (Frase frase) {
-        new insertAsyncTask(mFraseDao).execute(frase);
-    }
-
-    private static class insertAsyncTask extends AsyncTask<Frase, Void, Void> {
-
-        private FraseDAO mAsyncTaskDao;
-
-        insertAsyncTask(FraseDAO dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Frase... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
-    }
 }

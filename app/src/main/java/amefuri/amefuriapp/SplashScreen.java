@@ -18,7 +18,7 @@ public class SplashScreen extends Activity {
             public void run() {
                 mostrarMainActivity();
             }
-        }, 3000);
+        }, 2000);
     }
 
     private void mostrarMainActivity() {

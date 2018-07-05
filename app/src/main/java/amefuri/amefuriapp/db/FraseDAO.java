@@ -15,6 +15,6 @@ public interface FraseDAO {
     @Query("DELETE FROM frase_table")
     void deleteAll();
 
-    @Query("SELECT * from frase_table ORDER BY frase ASC")
+    @Query("SELECT * from frase_table ORDER BY id ASC")
     LiveData<List<Frase>> getAll();
 }

@@ -17,5 +17,4 @@ public class FraseViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Frase>> getAllFrases() { return mAllFrases; }
-    public void insert(Frase frase) { mRepository.insert(frase); }
 }

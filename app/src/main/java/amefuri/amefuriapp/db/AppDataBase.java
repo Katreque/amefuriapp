@@ -7,7 +7,9 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-@Database(entities = {Frase.class}, version = 1)
+import java.util.concurrent.Executors;
+
+@Database(entities = {Frase.class}, version = 2)
 abstract class AppDatabase extends RoomDatabase {
     public abstract FraseDAO fraseDao();
     private static AppDatabase INSTANCE;
@@ -18,7 +20,22 @@ abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "frase_database")
-                            .addCallback(sRoomDatabaseCallback)
+                            .fallbackToDestructiveMigration()
+                            .addCallback(new Callback() {
+                                @Override
+                                public void onOpen(@NonNull SupportSQLiteDatabase db) {
+                                    super.onOpen(db);
+                                    Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            INSTANCE.fraseDao().deleteAll();
+                                            for(int i = 0; i < 8; i++){
+                                                INSTANCE.fraseDao().insert(Frase.populateData(i));
+                                            }
+                                        }
+                                    });
+                                }
+                            })
                             .build();
 
                 }
@@ -26,14 +43,4 @@ abstract class AppDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
-
-    private static RoomDatabase.Callback sRoomDatabaseCallback =
-            new RoomDatabase.Callback(){
-
-                @Override
-                public void onOpen (@NonNull SupportSQLiteDatabase db){
-                    super.onOpen(db);
-                    new PopulateDbAsync(INSTANCE).execute();
-                }
-            };
 }
