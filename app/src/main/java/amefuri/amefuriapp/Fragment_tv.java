@@ -17,9 +17,9 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.http.HttpRequest;
 
 import java.io.IOException;
+import java.io.InputStream;
 
-import amefuri.amefuriapp.youtube.api.management.YouTubeTokenManager;
-
+import amefuri.amefuriapp.youtube.api.RecuperaPlaylist;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,6 +70,7 @@ public class Fragment_tv extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        getPlaylistTodosVideosAmefuri();
     }
 
     @Override
@@ -119,13 +120,7 @@ public class Fragment_tv extends Fragment {
     }
 
     public void getPlaylistTodosVideosAmefuri() {
-        HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-        JsonFactory JSON_FACTORY = new JacksonFactory();
-        YouTube youtube;
-        YouTubeTokenManager ytm = new YouTubeTokenManager();
-
-        youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
-            public void initialize(HttpRequest request) throws IOException {}
-        }).setApplicationName("youtube-cmdline-search-sample").build();
+        RecuperaPlaylist rp = new RecuperaPlaylist();
+        rp.retornaPlaylist(rp.ecchistoriaPlaylistId, this.getContext());
     }
 }
