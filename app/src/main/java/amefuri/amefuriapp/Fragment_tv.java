@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,10 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.http.HttpRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +35,7 @@ import amefuri.amefuriapp.youtube.api.RecuperaPlaylist;
  * Use the {@link Fragment_tv#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Fragment_tv extends Fragment {
+public class Fragment_tv extends Fragment implements InterfaceRecuperaPlaylsit{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -40,6 +46,10 @@ public class Fragment_tv extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     public Fragment_tv() {
         // Required empty public constructor
@@ -70,7 +80,18 @@ public class Fragment_tv extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        getPlaylistTodosVideosAmefuri();
+
+/*        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new MyAdapter(myDataset);
+        mRecyclerView.setAdapter(mAdapter);*/
+
+        RecuperaPlaylist rp = new RecuperaPlaylist(this);
+        rp.retornaPlaylist(this.getContext());
     }
 
     @Override
@@ -119,8 +140,31 @@ public class Fragment_tv extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void getPlaylistTodosVideosAmefuri() {
-        RecuperaPlaylist rp = new RecuperaPlaylist();
-        rp.retornaPlaylist(rp.ecchistoriaPlaylistId, this.getContext());
+    public void getPlaylistTodosVideosAmefuri(JSONObject response) {
+        try {
+            JSONArray items = response.getJSONArray("items");
+            int itemLength = items.length();
+            String[]titulos = new String[itemLength];
+            String[]descricoes = new String[itemLength];
+            String[]urls = new String[itemLength];
+
+            for(int i = 0; i < itemLength; i++){
+                JSONObject item = items.getJSONObject(i);
+
+                JSONObject snippet = item.getJSONObject("snippet");
+                String titulo = snippet.get("title").toString();
+                String descricao = snippet.get("description").toString();
+
+                JSONObject thumbnail = snippet.getJSONObject("thumbnails");
+                JSONObject maxRes = thumbnail.getJSONObject("maxres");
+                String url = maxRes.get("url").toString();
+
+                titulos[i] = titulo;
+                descricoes[i] = descricao;
+                urls[i] = url;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

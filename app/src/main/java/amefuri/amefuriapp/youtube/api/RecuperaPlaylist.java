@@ -1,6 +1,7 @@
 package amefuri.amefuriapp.youtube.api;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -14,12 +15,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import amefuri.amefuriapp.InterfaceRecuperaPlaylsit;
+
 public class RecuperaPlaylist {
+    String ecchistoriaPlaylistId;
     Credenciais cred = new Credenciais();
-    public String ecchistoriaPlaylistId = "PL74zhL2-anbeLIQDvuz_zrdpbjEo_1WXT";
-    public void retornaPlaylist(String idPlaylist, Context context) {
+    InterfaceRecuperaPlaylsit mListener;
+
+    public RecuperaPlaylist(InterfaceRecuperaPlaylsit context) {
+        ecchistoriaPlaylistId = "PL74zhL2-anbeLIQDvuz_zrdpbjEo_1WXT";
+        mListener = context;
+    }
+
+    public void retornaPlaylist(Context context) {
         String URL = "https://content.googleapis.com/youtube/v3/playlistItems";
-        String query = "?maxResults=10&part=snippet&playlistId="+idPlaylist+"&key="+cred.apiKey()+"";
+        String query = "?maxResults=10&part=snippet&playlistId="+ecchistoriaPlaylistId+"&key="+cred.apiKey()+"";
+        final String[][]retornoFinal = new String[3][];
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest objectRequest = new JsonObjectRequest(
@@ -29,34 +40,7 @@ public class RecuperaPlaylist {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray items = response.getJSONArray("items");
-                            int itemLength = items.length();
-                            String[]titulos = new String[itemLength];
-                            String[]descricoes = new String[itemLength];
-                            String[]urls = new String[itemLength];
-
-                            for(int i = 0; i < itemLength; i++){
-                                JSONObject item = items.getJSONObject(i);
-
-                                JSONObject snippet = item.getJSONObject("snippet");
-                                String titulo = snippet.get("title").toString();
-                                String descricao = snippet.get("description").toString();
-
-                                JSONObject thumbnail = snippet.getJSONObject("thumbnails");
-                                JSONObject maxRes = thumbnail.getJSONObject("maxres");
-                                String url = maxRes.get("url").toString();
-
-                                titulos[i] = titulo;
-                                descricoes[i] = descricao;
-                                urls[i] = url;
-                            }
-
-                            Log.e(titulos[0], descricoes[0]);
-                            Log.e("url", urls[0]);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        mListener.getPlaylistTodosVideosAmefuri(response);
                     }
                 },
                 new Response.ErrorListener() {
