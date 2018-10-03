@@ -3,9 +3,11 @@ package amefuri.amefuriapp;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +53,10 @@ public class Fragment_tv extends Fragment implements InterfaceRecuperaPlaylsit{
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    String[]titulos;
+    String[]descricoes;
+    String[]urls;
+
     public Fragment_tv() {
         // Required empty public constructor
     }
@@ -80,25 +86,35 @@ public class Fragment_tv extends Fragment implements InterfaceRecuperaPlaylsit{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-/*        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mAdapter = new MyAdapter(myDataset);
-        mRecyclerView.setAdapter(mAdapter);*/
-
-        RecuperaPlaylist rp = new RecuperaPlaylist(this);
-        rp.retornaPlaylist(this.getContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tv, container, false);
+        View frag = inflater.inflate(R.layout.fragment_tv, container, false);
+        return frag;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        RecuperaPlaylist rp = new RecuperaPlaylist(this);
+        rp.retornaPlaylist(this.getContext());
+
+        mRecyclerView = (RecyclerView) getView().findViewById(R.id.tv_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(this.getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        String[]init = new String[0];
+
+        mAdapter = new fragmentTvAdapter(init, init, init);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -144,9 +160,9 @@ public class Fragment_tv extends Fragment implements InterfaceRecuperaPlaylsit{
         try {
             JSONArray items = response.getJSONArray("items");
             int itemLength = items.length();
-            String[]titulos = new String[itemLength];
-            String[]descricoes = new String[itemLength];
-            String[]urls = new String[itemLength];
+            titulos = new String[itemLength];
+            descricoes = new String[itemLength];
+            urls = new String[itemLength];
 
             for(int i = 0; i < itemLength; i++){
                 JSONObject item = items.getJSONObject(i);
@@ -166,5 +182,8 @@ public class Fragment_tv extends Fragment implements InterfaceRecuperaPlaylsit{
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        mAdapter = new fragmentTvAdapter(titulos, descricoes, urls);
+        mRecyclerView.setAdapter(mAdapter);
     }
 }
