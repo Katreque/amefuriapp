@@ -3,7 +3,11 @@ package amefuri.amefuriapp;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +20,14 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.http.HttpRequest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.io.InputStream;
 
-import amefuri.amefuriapp.youtube.api.management.YouTubeTokenManager;
-
+import amefuri.amefuriapp.youtube.api.RecuperaPlaylist;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,7 +37,7 @@ import amefuri.amefuriapp.youtube.api.management.YouTubeTokenManager;
  * Use the {@link Fragment_tv#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Fragment_tv extends Fragment {
+public class Fragment_tv extends Fragment implements InterfaceRecuperaPlaylsit{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -40,6 +48,14 @@ public class Fragment_tv extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+    String[]titulos;
+    String[]descricoes;
+    String[]urls;
 
     public Fragment_tv() {
         // Required empty public constructor
@@ -76,7 +92,29 @@ public class Fragment_tv extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tv, container, false);
+        View frag = inflater.inflate(R.layout.fragment_tv, container, false);
+        return frag;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        RecuperaPlaylist rp = new RecuperaPlaylist(this);
+        rp.retornaPlaylist(this.getContext());
+
+        mRecyclerView = (RecyclerView) getView().findViewById(R.id.tv_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(this.getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        String[]init = new String[0];
+
+        mAdapter = new fragmentTvAdapter(init, init, init);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -118,14 +156,34 @@ public class Fragment_tv extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void getPlaylistTodosVideosAmefuri() {
-        HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-        JsonFactory JSON_FACTORY = new JacksonFactory();
-        YouTube youtube;
-        YouTubeTokenManager ytm = new YouTubeTokenManager();
+    public void getPlaylistTodosVideosAmefuri(JSONObject response) {
+        try {
+            JSONArray items = response.getJSONArray("items");
+            int itemLength = items.length();
+            titulos = new String[itemLength];
+            descricoes = new String[itemLength];
+            urls = new String[itemLength];
 
-        youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
-            public void initialize(HttpRequest request) throws IOException {}
-        }).setApplicationName("youtube-cmdline-search-sample").build();
+            for(int i = 0; i < itemLength; i++){
+                JSONObject item = items.getJSONObject(i);
+
+                JSONObject snippet = item.getJSONObject("snippet");
+                String titulo = snippet.get("title").toString();
+                String descricao = snippet.get("description").toString();
+
+                JSONObject thumbnail = snippet.getJSONObject("thumbnails");
+                JSONObject maxRes = thumbnail.getJSONObject("maxres");
+                String url = maxRes.get("url").toString();
+
+                titulos[i] = titulo;
+                descricoes[i] = descricao;
+                urls[i] = url;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mAdapter = new fragmentTvAdapter(titulos, descricoes, urls);
+        mRecyclerView.setAdapter(mAdapter);
     }
 }

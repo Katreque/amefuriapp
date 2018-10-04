@@ -20,8 +20,7 @@ public class MenuActivity extends AppCompatActivity
                     Fragment_tv.OnFragmentInteractionListener,
                     PlayFragment.OnFragmentInteractionListener,
                     ApoieFragment.OnFragmentInteractionListener,
-                    ConfigFragment.OnFragmentInteractionListener,
-                    FrasesFragment.OnFragmentInteractionListener
+                    ConfigFragment.OnFragmentInteractionListener
 {
 
     @Override
@@ -114,12 +113,6 @@ public class MenuActivity extends AppCompatActivity
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.mainLayout, new ConfigFragment(), "config");
-            transaction.addToBackStack(null);
-            transaction.commit();
-        } else if (id == R.id.nav_frases) {
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.mainLayout, new FrasesFragment(), "frases");
             transaction.addToBackStack(null);
             transaction.commit();
         }

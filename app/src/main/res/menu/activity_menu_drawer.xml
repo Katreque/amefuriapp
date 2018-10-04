@@ -21,10 +21,6 @@
             android:icon="@drawable/amefuri_cast_icon"
             android:title="Amefuri Play" />
         <item
-            android:id="@+id/nav_frases"
-            android:icon="@drawable/chat_icon"
-            android:title="Frases" />
-        <item
             android:id="@+id/nav_apoie"
             android:icon="@drawable/apoie_icon"
             android:title="Apoie" />
