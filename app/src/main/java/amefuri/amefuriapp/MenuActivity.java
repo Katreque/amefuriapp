@@ -13,6 +13,9 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
                     BlogFragment.OnFragmentInteractionListener,
@@ -20,7 +23,8 @@ public class MenuActivity extends AppCompatActivity
                     Fragment_tv.OnFragmentInteractionListener,
                     PlayFragment.OnFragmentInteractionListener,
                     ApoieFragment.OnFragmentInteractionListener,
-                    ConfigFragment.OnFragmentInteractionListener
+                    ConfigFragment.OnFragmentInteractionListener,
+                    HotspotFragment.OnFragmentInteractionListener
 {
 
     @Override
@@ -113,6 +117,12 @@ public class MenuActivity extends AppCompatActivity
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.mainLayout, new ConfigFragment(), "config");
+            transaction.addToBackStack(null);
+            transaction.commit();
+        } else if (id == R.id.nav_hotspot) {
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.mainLayout, new HotspotFragment(), "hotspot");
             transaction.addToBackStack(null);
             transaction.commit();
         }
